@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude & Claude Code 项目组 AI 培训手册 v2</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f0f0f0;--white:#fff;--dark:#0f0f0f;--mid:#3d3d3d;--light:#888;
+  --purple:#6b3fa0;--purple-l:#8b5fc0;--purple-pale:#f3eeff;--purple-b:#c9b3e8;
+  --orange:#c0541e;--teal:#1a6b5a;--border:#d8d5d0;--code-bg:#1a1a2e;
+}
+body{font-family:-apple-system,'PingFang SC','Microsoft YaHei','Noto Sans SC',sans-serif;background:var(--bg);color:var(--dark);line-height:1.65;}
+
+/* NAV */
+.top-nav{background:var(--dark);color:#fff;padding:12px 28px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:100;}
+.nav-logo{background:var(--purple);color:#fff;font-size:10px;font-weight:800;letter-spacing:1.2px;padding:4px 10px;border-radius:4px;text-transform:uppercase;}
+.nav-title{font-size:13.5px;font-weight:600;color:#f0f0f0;}
+.nav-meta{font-size:12px;color:#888;margin-left:auto;}
+
+/* LAYOUT */
+.layout{display:flex;min-height:calc(100vh - 50px);}
+
+/* SIDEBAR */
+.sidebar{width:232px;flex-shrink:0;background:var(--dark);padding:16px 0;position:sticky;top:50px;height:calc(100vh - 50px);overflow-y:auto;}
+.sidebar::-webkit-scrollbar{width:3px}.sidebar::-webkit-scrollbar-thumb{background:#333}
+.sb-group{padding:14px 16px 3px;font-size:9px;font-weight:800;letter-spacing:2px;color:#555;text-transform:uppercase;}
+.sb-link{display:block;padding:7px 16px 7px 20px;font-size:12.5px;color:#999;text-decoration:none;border-left:3px solid transparent;transition:all .12s;line-height:1.35;}
+.sb-link:hover{background:#1a1a1a;color:#e0e0e0;}
+.sb-link.active{border-left-color:var(--purple-l);color:var(--purple-l);background:#1a1a1a;font-weight:600;}
+
+/* MAIN */
+.main{flex:1;padding:44px 52px;max-width:900px;}
+.sec{margin-bottom:72px;scroll-margin-top:76px;}
+.thumb{width:100%;border-radius:8px;border:1px solid var(--border);box-shadow:0 3px 14px rgba(0,0,0,.1);margin-bottom:30px;display:block;}
+
+/* PILL */
+.bc{display:inline-flex;align-items:center;gap:6px;background:var(--purple-pale);border:1px solid var(--purple-b);border-radius:20px;padding:3px 11px;font-size:11px;font-weight:600;color:var(--purple);margin-bottom:10px;}
+
+.sec-title{font-size:24px;font-weight:800;color:var(--dark);margin-bottom:10px;line-height:1.25;}
+.sec-lead{font-size:14.5px;color:var(--mid);margin-bottom:22px;line-height:1.75;padding-left:14px;border-left:3px solid var(--purple);}
+
+/* CARDS */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0;}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:16px 0;}
+.grid-auto{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:14px;margin:16px 0;}
+.card{background:#fff;border:1px solid var(--border);border-radius:8px;padding:16px 15px;}
+.card.tp{border-top:3px solid var(--purple);}
+.card.to{border-top:3px solid var(--orange);}
+.card.tt{border-top:3px solid var(--teal);}
+.card.ts{border-top:3px solid #c0392b;}
+.card-num{font-size:26px;font-weight:900;color:var(--purple);margin-bottom:5px;}
+.card-title{font-size:13.5px;font-weight:700;color:var(--dark);margin-bottom:5px;}
+.card-desc{font-size:12.5px;color:var(--mid);line-height:1.55;}
+
+/* MODEL CARDS */
+.model-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin:16px 0;}
+.model-card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:18px 16px;position:relative;}
+.model-badge{position:absolute;top:12px;right:12px;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;text-transform:uppercase;letter-spacing:.5px;}
+.badge-default{background:#d4f0e2;color:#1a6b5a;}
+.badge-power{background:#ede8ff;color:var(--purple);}
+.badge-fast{background:#fff3e0;color:var(--orange);}
+.badge-unavail{background:#f5f5f5;color:#999;text-decoration:line-through;}
+.model-name{font-size:15px;font-weight:800;color:var(--dark);margin-bottom:3px;}
+.model-family{font-size:11px;color:var(--light);margin-bottom:10px;}
+.model-price{font-size:12px;font-weight:700;color:var(--purple);margin-bottom:8px;}
+.model-specs{font-size:11.5px;color:var(--mid);line-height:1.7;margin-bottom:10px;}
+.model-best{font-size:11.5px;color:var(--dark);background:var(--purple-pale);border-radius:5px;padding:7px 10px;line-height:1.5;}
+.model-best strong{color:var(--purple);}
+.model-unavail-note{font-size:11px;color:#c0392b;background:#fdf2f2;border:1px solid #e8b4b4;border-radius:5px;padding:6px 10px;margin-top:8px;line-height:1.5;}
+
+/* STEPS */
+.steps{display:flex;flex-direction:column;gap:11px;margin:14px 0;}
+.step{display:flex;align-items:flex-start;gap:12px;}
+.step-n{width:26px;height:26px;background:var(--purple);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.step-body{flex:1;}
+.step-title{font-size:13.5px;font-weight:700;color:var(--dark);margin-bottom:2px;}
+.step-desc{font-size:12.5px;color:var(--mid);line-height:1.55;}
+
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse;margin:14px 0;font-size:12.5px;}
+.tbl th{background:#f5f3ff;padding:9px 13px;text-align:left;font-weight:700;font-size:11.5px;color:var(--mid);border-bottom:2px solid var(--purple-b);}
+.tbl td{padding:9px 13px;border-bottom:1px solid var(--border);color:var(--mid);vertical-align:top;}
+.tbl tr:last-child td{border-bottom:none;}
+.tbl tr:hover td{background:var(--purple-pale);}
+.td-b{font-weight:600;color:var(--dark);}
+
+/* CALLOUT */
+.callout{background:var(--purple-pale);border:1px solid var(--purple-b);border-left:4px solid var(--purple);border-radius:6px;padding:13px 17px;margin:14px 0;font-size:13.5px;color:var(--dark);line-height:1.65;}
+.callout strong{color:var(--purple);}
+.callout-warn{background:#fff9f0;border:1px solid #e8c88a;border-left-color:var(--orange);}
+.callout-warn strong{color:var(--orange);}
+.callout-red{background:#fdf2f2;border:1px solid #e8b4b4;border-left-color:#c0392b;}
+.callout-red strong{color:#c0392b;}
+.callout-teal{background:#eef7f4;border:1px solid #b7deca;border-left-color:var(--teal);}
+.callout-teal strong{color:var(--teal);}
+
+/* FLOW */
+.flow{display:flex;gap:0;margin:16px 0;align-items:stretch;}
+.flow-step{flex:1;background:#fff;border:1px solid var(--border);padding:14px 12px;position:relative;}
+.flow-step:not(:last-child)::after{content:'→';position:absolute;right:-12px;top:50%;transform:translateY(-50%);z-index:2;color:var(--purple);font-size:15px;font-weight:700;}
+.flow-step:first-child{border-radius:8px 0 0 8px;}
+.flow-step:last-child{border-radius:0 8px 8px 0;}
+.flow-n{font-size:10px;font-weight:700;color:var(--purple);margin-bottom:3px;}
+.flow-title{font-size:12.5px;font-weight:700;color:var(--dark);margin-bottom:3px;}
+.flow-desc{font-size:11.5px;color:var(--mid);line-height:1.4;}
+
+/* PART BANNER */
+.part-banner{background:linear-gradient(135deg,#1a0a2e 0%,#2d1060 100%);color:#fff;border-radius:10px;padding:30px 34px;margin-bottom:30px;position:relative;overflow:hidden;}
+.part-banner::after{content:attr(data-part);position:absolute;right:34px;top:50%;transform:translateY(-50%);font-size:76px;font-weight:900;opacity:.08;color:#fff;line-height:1;}
+.pb-label{font-size:10.5px;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin-bottom:7px;}
+.pb-title{font-size:22px;font-weight:800;margin-bottom:9px;}
+.pb-desc{font-size:13.5px;color:#ccc;line-height:1.65;}
+.pb-tags{display:flex;gap:7px;margin-top:13px;flex-wrap:wrap;}
+.pb-tag{background:rgba(107,63,160,.4);border:1px solid rgba(139,95,192,.5);color:#d0b8f5;font-size:10.5px;padding:3px 9px;border-radius:3px;}
+
+/* SOP ACCORDION */
+.sop{border:1px solid var(--border);border-radius:8px;overflow:hidden;margin:14px 0;}
+.sop-head{background:#f5f3ff;padding:11px 16px;font-weight:700;font-size:13px;color:var(--dark);cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:background .15s;user-select:none;}
+.sop-head:hover{background:#ede8ff;}
+.sop-head .sop-arrow{color:var(--purple);font-size:11px;transition:transform .2s;}
+.sop-head.open .sop-arrow{transform:rotate(90deg);}
+.sop-body{display:none;padding:16px;border-top:1px solid var(--purple-b);}
+.sop-body.open{display:block;animation:fadeIn .18s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+
+/* CODE */
+.code{background:var(--code-bg);color:#d4d4d4;border-radius:6px;padding:14px 18px;font-family:'SF Mono','Fira Code',monospace;font-size:12.5px;line-height:1.6;overflow-x:auto;margin:10px 0;}
+code{background:#ede8ff;padding:1px 5px;border-radius:3px;font-size:12px;font-family:'SF Mono','Fira Code',monospace;color:var(--purple);}
+
+/* PLAN GRID */
+.plan-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:16px 0;}
+.plan-card{background:#fff;border:1px solid var(--border);border-radius:8px;padding:16px 14px;}
+.plan-card.highlight{border-color:var(--purple);border-width:2px;}
+.plan-name{font-size:13px;font-weight:800;color:var(--dark);margin-bottom:4px;}
+.plan-price{font-size:22px;font-weight:900;color:var(--purple);margin-bottom:8px;}
+.plan-price span{font-size:12px;font-weight:400;color:var(--light);}
+.plan-feature{font-size:11.5px;color:var(--mid);line-height:1.9;}
+
+/* COMPLIANCE */
+.comp-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0;}
+.comp-card{border-radius:7px;padding:14px 15px;}
+.comp-red{background:#fdf2f2;border:1px solid #e8b4b4;}
+.comp-green{background:var(--purple-pale);border:1px solid var(--purple-b);}
+.comp-yellow{background:#fff9f0;border:1px solid #e8c88a;}
+.comp-title{font-size:13px;font-weight:700;margin-bottom:8px;}
+.comp-red .comp-title{color:#c0392b;}
+.comp-green .comp-title{color:var(--purple);}
+.comp-yellow .comp-title{color:var(--orange);}
+.comp-list{font-size:12.5px;color:var(--mid);line-height:1.8;padding-left:4px;}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#1a0a2e 0%,#2d1060 60%,#1a2060 100%);border-radius:12px;padding:48px 48px 44px;margin-bottom:36px;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-80px;right:-80px;width:320px;height:320px;border-radius:50%;background:rgba(107,63,160,.3);}
+.hero-eyebrow{font-size:11px;font-weight:700;letter-spacing:2px;color:#9b7fd4;margin-bottom:14px;}
+.hero-title{font-size:36px;font-weight:900;color:#fff;line-height:1.2;margin-bottom:16px;}
+.hero-title em{color:#c4a0f0;font-style:normal;}
+.hero-lead{font-size:15px;color:#ccc;line-height:1.7;max-width:520px;margin-bottom:28px;}
+.hero-stats{display:flex;gap:32px;}
+.hero-stat-num{font-size:32px;font-weight:900;color:#c4a0f0;display:block;}
+.hero-stat-label{font-size:12px;color:#999;display:block;}
+
+/* WHERE TO FIND */
+.where-box{background:#fff;border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin:10px 0;display:flex;align-items:flex-start;gap:12px;}
+.where-icon{font-size:20px;flex-shrink:0;margin-top:2px;}
+.where-body{flex:1;}
+.where-title{font-size:13px;font-weight:700;color:var(--dark);margin-bottom:3px;}
+.where-desc{font-size:12px;color:var(--mid);line-height:1.5;}
+.where-path{font-size:11px;color:var(--purple);font-family:'SF Mono',monospace;background:var(--purple-pale);padding:2px 7px;border-radius:3px;display:inline-block;margin-top:4px;}
+
+hr.div{border:none;border-top:1px solid var(--border);margin:28px 0;}
+
+@media(max-width:768px){
+  .sidebar{display:none;}
+  .main{padding:22px 18px;}
+  .grid-3,.grid-2,.comp-grid,.plan-grid,.model-grid{grid-template-columns:1fr;}
+  .flow{flex-direction:column;}
+  .flow-step{border-radius:6px!important;}
+  .flow-step:not(:last-child)::after{display:none;}
+  .hero{padding:32px 24px;}
+  .hero-title{font-size:26px;}
+}
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <span class="nav-logo">AI Training</span>
+  <span class="nav-title">Claude &amp; Claude Code 项目组 AI 培训手册</span>
+  <span class="nav-meta">项目组版 · 正式演示版 · 2026</span>
+</nav>
+
+<div class="layout">
+<nav class="sidebar">
+  <div class="sb-group">概览</div>
+  <a class="sb-link active" href="#cover" onclick="setA(this)">封面与培训目标</a>
+  <a class="sb-link" href="#models" onclick="setA(this)">模型选择指南</a>
+  <a class="sb-link" href="#vs-gpt" onclick="setA(this)">Claude vs ChatGPT</a>
+  <a class="sb-link" href="#overview" onclick="setA(this)">四段式结构</a>
+
+  <div class="sb-group">PART 01 · 配置</div>
+  <a class="sb-link" href="#config-paths" onclick="setA(this)">接入路径总览</a>
+  <a class="sb-link" href="#config-claude-ai" onclick="setA(this)">Claude.ai 账号 SOP</a>
+  <a class="sb-link" href="#config-api" onclick="setA(this)">API Key SOP</a>
+  <a class="sb-link" href="#config-claudecode" onclick="setA(this)">Claude Code CLI SOP</a>
+  <a class="sb-link" href="#config-vscode" onclick="setA(this)">VS Code 扩展 SOP</a>
+
+  <div class="sb-group">PART 02 · Claude.ai 功能</div>
+  <a class="sb-link" href="#claude-projects" onclick="setA(this)">Projects 知识库</a>
+  <a class="sb-link" href="#claude-research" onclick="setA(this)">Research 深度研究</a>
+  <a class="sb-link" href="#claude-data" onclick="setA(this)">文件与数据分析</a>
+  <a class="sb-link" href="#claude-scheduled" onclick="setA(this)">Scheduled Tasks 定时任务</a>
+  <a class="sb-link" href="#claude-writing" onclick="setA(this)">写作与文档协作</a>
+
+  <div class="sb-group">PART 03 · Claude Code 功能</div>
+  <a class="sb-link" href="#cc-core" onclick="setA(this)">CLI 核心工作流</a>
+  <a class="sb-link" href="#cc-claude-md" onclick="setA(this)">CLAUDE.md 规则文件</a>
+  <a class="sb-link" href="#cc-skills" onclick="setA(this)">Skills 可复用能力</a>
+  <a class="sb-link" href="#cc-agents" onclick="setA(this)">Subagents 并行执行</a>
+  <a class="sb-link" href="#cc-planmode" onclick="setA(this)">Plan Mode &amp; 验收</a>
+  <a class="sb-link" href="#cc-routines" onclick="setA(this)">Routines 云端自动化</a>
+  <a class="sb-link" href="#scenario-map" onclick="setA(this)">功能场景总表</a>
+
+  <div class="sb-group">PART 04 · 案例</div>
+  <a class="sb-link" href="#case-flow" onclick="setA(this)">Python 热力图流程</a>
+  <a class="sb-link" href="#case-prompt" onclick="setA(this)">CLAUDE.md + 提示词</a>
+
+  <div class="sb-group">合规与边界</div>
+  <a class="sb-link" href="#compliance" onclick="setA(this)">合规使用规范</a>
+
+  <div class="sb-group">总结</div>
+  <a class="sb-link" href="#wrapup" onclick="setA(this)">带走的判断</a>
+</nav>
+
+<main class="main">
+
+<!-- COVER -->
+<section id="cover" class="sec">
+  <div class="hero">
+    <div class="hero-eyebrow">ANTHROPIC · AI TOOLKIT TRAINING · 2026</div>
+    <div class="hero-title">Claude &amp; Claude Code<br><em>项目组 AI 培训手册</em></div>
+    <div class="hero-lead">目标是帮助项目组建立一套<strong style="color:#fff">可落地的工作流</strong>：用 Claude.ai 做资料理解、深度研究和报告撰写；用 Claude Code 做数据清洗、脚本生成和自动化任务沉淀。</div>
+    <div class="hero-stats">
+      <div><span class="hero-stat-num">5</span><span class="hero-stat-label">个可用模型，各有所长</span></div>
+      <div><span class="hero-stat-num">10+</span><span class="hero-stat-label">个核心功能场景</span></div>
+      <div><span class="hero-stat-num">4</span><span class="hero-stat-label">条合规边界线</span></div>
+    </div>
+  </div>
+  <div class="grid-3">
+    <div class="card tp"><div class="card-title">培训对象</div><div class="card-desc">项目经理 / 顾问 / 数据分析同事</div></div>
+    <div class="card to"><div class="card-title">培训目标</div><div class="card-desc">从配置到交付，建立可落地 AI 工作流</div></div>
+    <div class="card tt"><div class="card-title">带走的输出</div><div class="card-desc">CLAUDE.md 模板、Skills 库、提示词框架、Python 热力图脚本</div></div>
+  </div>
+</section>
+
+<!-- MODELS -->
+<section id="models" class="sec">
+  <span class="bc">概览 · 模型选择</span>
+  <h2 class="sec-title">模型选择指南：用对模型，事半功倍</h2>
+  <p class="sec-lead">Anthropic 目前有 5 个可选模型，能力与成本差异显著。日常工作选错模型，要么浪费预算，要么效果达不到预期——这里告诉你每个模型适合做什么。</p>
+
+  <div class="model-grid">
+    <!-- Haiku -->
+    <div class="model-card">
+      <span class="model-badge badge-fast">快速 / 低成本</span>
+      <div class="model-name">Claude Haiku 4.5</div>
+      <div class="model-family">Haiku 系列 · 最轻量</div>
+      <div class="model-price">API：$1 / $5 per M token</div>
+      <div class="model-specs">
+        上下文：200K token<br>
+        速度：最快，毫秒级响应<br>
+        能力：基础推理，简单任务
+      </div>
+      <div class="model-best">
+        <strong>最适合：</strong>批量分类、摘要提取、Subagent 子任务、高频 API 调用、简单问答<br><br>
+        <strong>不适合：</strong>复杂分析、长文档理解、报告写作
+      </div>
+    </div>
+
+    <!-- Sonnet -->
+    <div class="model-card" style="border:2px solid var(--purple);">
+      <span class="model-badge badge-default">⭐ 日常首选</span>
+      <div class="model-name">Claude Sonnet 4.6</div>
+      <div class="model-family">Sonnet 系列 · 综合最优</div>
+      <div class="model-price">API：$3 / $15 per M token</div>
+      <div class="model-specs">
+        上下文：1M token（2026.3 GA）<br>
+        SWE-bench：79.6%<br>
+        能力：接近 Opus 的 80%，成本低 5x
+      </div>
+      <div class="model-best">
+        <strong>最适合：</strong>日常报告写作、数据分析脚本、文件阅读、代码生成、Claude Code 默认模型<br><br>
+        <strong>项目组建议：</strong>90% 的工作用 Sonnet，省钱省时
+      </div>
+    </div>
+
+    <!-- Opus 4.6 -->
+    <div class="model-card">
+      <span class="model-badge badge-power">高能力</span>
+      <div class="model-name">Claude Opus 4.6</div>
+      <div class="model-family">Opus 系列 · 深度推理</div>
+      <div class="model-price">API：$5 / $25 per M token</div>
+      <div class="model-specs">
+        上下文：1M token<br>
+        任务完成窗口：14.5 小时（最长）<br>
+        GPQA Diamond：80.9%
+      </div>
+      <div class="model-best">
+        <strong>最适合：</strong>超长文档分析（完整代码库 / 300 页报告）、复杂跨文件推理、高价值交付物最终校对<br><br>
+        <strong>注意：</strong>成本是 Sonnet 的 5x，按需升级不要默认用
+      </div>
+    </div>
+
+    <!-- Opus 4.7 -->
+    <div class="model-card">
+      <span class="model-badge badge-power">最新 Opus</span>
+      <div class="model-name">Claude Opus 4.7</div>
+      <div class="model-family">Opus 系列 · 当前最强可用</div>
+      <div class="model-price">API：$5 / $25 per M token</div>
+      <div class="model-specs">
+        上下文：1M token<br>
+        改进：指令遵循 + 自我核验<br>
+        视觉：支持高分辨率图像
+      </div>
+      <div class="model-best">
+        <strong>最适合：</strong>复杂软件工程任务、多步骤长流程 Agent、需要自我验证输出的场景<br><br>
+        <strong>当前推荐：</strong>Fable 5 暂停期间，Opus 4.7 是能力最强的可用选项
+      </div>
+    </div>
+
+    <!-- Fable 5 -->
+    <div class="model-card" style="opacity:.75;border-style:dashed;">
+      <span class="model-badge badge-unavail">暂停使用</span>
+      <div class="model-name" style="text-decoration:line-through;color:#999">Claude Fable 5</div>
+      <div class="model-family">Mythos 系列 · 最强能力（暂停）</div>
+      <div class="model-price" style="color:#999">$10 / $50 per M token（发布时定价）</div>
+      <div class="model-specs" style="color:#999">
+        上下文：超长（Mythos 级）<br>
+        SWE-bench Pro：80.3%<br>
+        发布：2026年6月9日
+      </div>
+      <div class="model-unavail-note">
+        ⚠️ <strong>目前全球暂停：</strong>Fable 5 于 2026 年 6 月 9 日发布，6 月 12 日因美国政府出口管制指令被强制下线，全球所有用户无法访问。Anthropic 公开表示异议并正在寻求恢复，暂无确定时间。<br><br>
+        <strong>替代方案：</strong>当前用 Opus 4.7 或 Opus 4.8（如已发布）替代。
+      </div>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:8px">
+    <strong>快速决策口诀：</strong>简单批量 → Haiku；日常工作（默认）→ Sonnet 4.6；复杂分析 / 高价值交付 → Opus 4.7；需要 Fable 5 → 目前只能等，暂用 Opus 4.7 替代。
+  </div>
+
+  <table class="tbl" style="margin-top:20px">
+    <thead><tr><th>场景</th><th>推荐模型</th><th>理由</th></tr></thead>
+    <tbody>
+      <tr><td>写项目报告初稿（政府咨询风格）</td><td class="td-b">Sonnet 4.6</td><td>长文本、写作质量好，成本合理</td></tr>
+      <tr><td>阅读 300 页政策文件并提炼观点</td><td class="td-b">Opus 4.6 / 4.7</td><td>1M 上下文，整份文件一次性放入</td></tr>
+      <tr><td>Excel 问卷数据清洗脚本</td><td class="td-b">Sonnet 4.6</td><td>代码生成质量高，Claude Code 默认</td></tr>
+      <tr><td>同时处理 10 份访谈摘要（Subagent）</td><td class="td-b">Haiku 4.5</td><td>简单摘要任务，成本降低 80%</td></tr>
+      <tr><td>关键交付物最终质量把关</td><td class="td-b">Opus 4.7</td><td>自我核验能力强，减少人工复查</td></tr>
+      <tr><td>高频 API 批量调用（>1000次/天）</td><td class="td-b">Haiku 4.5</td><td>成本最低，延迟最小</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- VS GPT -->
+<section id="vs-gpt" class="sec">
+  <span class="bc">概览</span>
+  <h2 class="sec-title">Claude vs ChatGPT：选哪个，为什么</h2>
+  <p class="sec-lead">两套工具能力相近，但设计哲学和适用场景有明显差异。了解差异后按任务选择——不需要选边站。</p>
+  <table class="tbl">
+    <thead><tr><th>维度</th><th>Claude / Claude Code</th><th>ChatGPT / OpenAI Codex</th><th>项目组建议</th></tr></thead>
+    <tbody>
+      <tr><td class="td-b">上下文窗口</td><td>Sonnet/Opus 4.x：1M token（2026.3 GA）</td><td>GPT-4o：128K</td><td>大型文档 / 代码库首选 Claude</td></tr>
+      <tr><td class="td-b">代码执行</td><td>Claude Code CLI：读取本地目录 + 真实执行</td><td>OpenAI Codex：自然语言→代码，沙箱执行</td><td>本地文件操作首选 Claude Code</td></tr>
+      <tr><td class="td-b">规则文件</td><td>CLAUDE.md（项目级，每次自动注入）</td><td>AGENTS.md（类似机制）</td><td>两者均支持，概念相同</td></tr>
+      <tr><td class="td-b">深度研究</td><td>Research（网页 + Google Workspace + 集成应用）</td><td>Deep Research（网页检索 + 分析）</td><td>功能相似，Claude 叫"Research"</td></tr>
+      <tr><td class="td-b">定时自动化</td><td>Scheduled Tasks（Cowork Desktop）+ Routines（Claude Code 云端）</td><td>ChatGPT Tasks（claude.ai 浏览器版本中没有等效功能）</td><td>Claude 的定时功能更完整</td></tr>
+      <tr><td class="td-b">数据安全</td><td>可选欧盟数据驻留；企业版零日志</td><td>API 调用默认不训练</td><td>涉密数据均需脱敏后上传</td></tr>
+    </tbody>
+  </table>
+  <div class="callout"><strong>本手册立场：</strong>项目组使用 Claude 账号，本手册聚焦 Claude.ai + Claude Code 体系。功能名称与 ChatGPT 有差异（如 Research 而非 Deep Research），请注意区分。</div>
+</section>
+
+<!-- OVERVIEW -->
+<section id="overview" class="sec">
+  <span class="bc">概览</span>
+  <h2 class="sec-title">四段式培训结构</h2>
+  <p class="sec-lead">能用（配置）→ 会用 Claude.ai（协作功能）→ 会用 Claude Code（执行功能）→ 安全用（合规边界）。</p>
+  <div class="grid-3">
+    <div class="card tp"><div class="card-num">01</div><div class="card-title">配置</div><div class="card-desc">四条路径 SOP——Claude.ai 账号、API Key、Claude Code CLI、VS Code 扩展。</div></div>
+    <div class="card" style="border-top:3px solid var(--purple-l)"><div class="card-num">02</div><div class="card-title">Claude.ai</div><div class="card-desc">Projects、Research、文件分析、Scheduled Tasks、写作——5 个真实工作场景操作指南。</div></div>
+    <div class="card to"><div class="card-num">03</div><div class="card-title">Claude Code</div><div class="card-desc">CLI、CLAUDE.md、Skills、Subagents、Plan Mode、Routines——从执行到团队资产沉淀。</div></div>
+  </div>
+  <div class="callout"><strong>主线逻辑：</strong>Claude.ai 解决"想清楚" → Claude Code 解决"跑起来" → 合规边界确保"安全用"。</div>
+</section>
+
+<!-- PART 01 -->
+<div class="part-banner" data-part="01">
+  <div class="pb-label">PART 01</div>
+  <div class="pb-title">配置路径</div>
+  <div class="pb-desc">四条路径，按角色选择。所有成员配 Claude.ai 账号；数据分析同事加 API Key；需要本地执行的加 Claude Code CLI。</div>
+  <div class="pb-tags">
+    <span class="pb-tag">Claude.ai 账号</span><span class="pb-tag">Anthropic API Key</span>
+    <span class="pb-tag">Claude Code CLI</span><span class="pb-tag">VS Code 扩展</span>
+  </div>
+</div>
+
+<section id="config-paths" class="sec">
+  <span class="bc">PART 01 · 配置</span>
+  <h2 class="sec-title">四条接入路径总览</h2>
+  <table class="tbl">
+    <thead><tr><th>路径</th><th>适合人群</th><th>典型场景</th><th>门槛</th></tr></thead>
+    <tbody>
+      <tr><td class="td-b">Claude.ai 账号</td><td>所有成员</td><td>Research、Projects、文件分析、写作</td><td>⭐ 无需配置</td></tr>
+      <tr><td class="td-b">Anthropic API Key</td><td>有批量/自动化需求</td><td>批量处理、脚本调用、定制应用集成</td><td>⭐⭐ 需申请</td></tr>
+      <tr><td class="td-b">Claude Code CLI</td><td>数据分析、需跑 Python</td><td>数据清洗、图表生成、Git 操作、批量处理</td><td>⭐⭐⭐ 需装环境</td></tr>
+      <tr><td class="td-b">VS Code 扩展</td><td>写代码的同事</td><td>行内补全、边写边问、代码解释和重构</td><td>⭐⭐ 需安装</td></tr>
+    </tbody>
+  </table>
+
+  <div class="card-title" style="margin:20px 0 10px">💰 套餐选择（2026 年 6 月）</div>
+  <div class="plan-grid">
+    <div class="plan-card">
+      <div class="plan-name">Pro</div>
+      <div class="plan-price">$20<span>/月</span></div>
+      <div class="plan-feature">✓ Sonnet 4.6 / Opus 4.7<br>✓ Projects + Research<br>✓ Claude Code 基础<br>✓ Scheduled Tasks（Desktop）<br>5 小时滚动会话限制</div>
+    </div>
+    <div class="plan-card highlight">
+      <div class="plan-name">Max 5x ⭐推荐</div>
+      <div class="plan-price">$100<span>/月</span></div>
+      <div class="plan-feature">✓ Pro 全部功能<br>✓ 5x 使用量<br>✓ Claude Code 专业版<br>✓ Routines（云端定时）<br>适合日常重度使用</div>
+    </div>
+    <div class="plan-card">
+      <div class="plan-name">Max 20x</div>
+      <div class="plan-price">$200<span>/月</span></div>
+      <div class="plan-feature">✓ Max 5x 全部功能<br>✓ 20x 使用量<br>✓ Subagents 并行<br>✓ Dynamic Workflows<br>适合全天候多任务</div>
+    </div>
+    <div class="plan-card">
+      <div class="plan-name">API 按量计费</div>
+      <div class="plan-price" style="font-size:16px">$1–5<span>/M token</span></div>
+      <div class="plan-feature">Haiku 4.5：$1/$5<br>Sonnet 4.6：$3/$15<br>Opus 4.7：$5/$25<br>缓存读：仅 0.1x 成本<br>无会话上限</div>
+    </div>
+  </div>
+</section>
+
+<section id="config-claude-ai" class="sec">
+  <span class="bc">PART 01 · 配置 — Claude.ai 账号</span>
+  <h2 class="sec-title">路径一：Claude.ai 账号 SOP</h2>
+  <p class="sec-lead">访问 <strong>claude.ai</strong>，注册账号后升级 Pro（$20/月）。在浏览器或下载 Claude Desktop App 均可使用。注意：部分功能（Scheduled Tasks）仅在 Desktop App 中可用。</p>
+  <div class="steps">
+    <div class="step"><div class="step-n">1</div><div class="step-body"><div class="step-title">注册并升级 Pro</div><div class="step-desc">访问 claude.ai → 注册账号 → 左下角升级 Pro 计划。升级后可用 Sonnet 4.6 / Opus 4.7、Projects、Research、文件分析等全部 claude.ai 功能。</div></div></div>
+    <div class="step"><div class="step-n">2</div><div class="step-body"><div class="step-title">下载 Claude Desktop App（推荐）</div><div class="step-desc">从 claude.ai 下载桌面应用（macOS / Windows）。Desktop App 拥有浏览器版没有的功能：Cowork（文件夹自动化）、Scheduled Tasks（定时任务）、Dispatch（手机远程触发）。</div></div></div>
+    <div class="step"><div class="step-n">3</div><div class="step-body"><div class="step-title">按项目建立 Project</div><div class="step-desc">左侧边栏 → 「+ New project」，按项目名称创建。每个 Project 独立管理文件和对话，上下文隔离不串扰。</div></div></div>
+    <div class="step"><div class="step-n">4</div><div class="step-body"><div class="step-title">上传核心项目文件</div><div class="step-desc">在 Project 内上传：合同、方案、问卷、访谈记录、报告模板。命名建议：<code>2024-访谈记录-成都-商户A.pdf</code></div></div></div>
+    <div class="step"><div class="step-n">5</div><div class="step-body"><div class="step-title">写入 Custom Instructions</div><div class="step-desc">Project Settings → Custom Instructions：设置报告风格、客户口径、禁止事项。Claude 每次对话都会遵守这些规则。</div></div></div>
+  </div>
+  <div class="sop">
+    <div class="sop-head" onclick="toggleSop(this)"><span>📋 Custom Instructions 模板（点击展开）</span><span class="sop-arrow">▶</span></div>
+    <div class="sop-body">
+      <div class="code" style="background:#1a0a2e;color:#d0b8f5;font-size:12px">
+你是本项目的研究助手。项目背景：[四川省餐饮个体工商户动态监测研究]，委托方为[某省商务厅]。<br><br>
+输出风格：政府咨询报告风格，客观陈述，避免绝对化表述。<br>
+数据规范：政策数据必须标注来源和时间，不得编造统计数字。<br>
+格式：段落使用二级标题，要点用短句。<br><br>
+禁止事项：<br>
+- 不得将客户名称、项目编号写入任何输出<br>
+- 不得引用我未提供的"内部数据"或"调研结论"<br>
+- 所有政策摘引须注明"来源：[文件名]"
+      </div>
+    </div>
+  </div>
+  <div class="callout callout-warn"><strong>⚠ 文件安全：</strong>Project 内上传的文件会被 Claude 读取。禁止上传含客户姓名、手机、身份证、合同金额的原始文件。上传前脱敏处理。</div>
+</section>
+
+<section id="config-api" class="sec">
+  <span class="bc">PART 01 · 配置 — API Key</span>
+  <h2 class="sec-title">路径二：Anthropic API Key SOP</h2>
+  <p class="sec-lead">访问 <strong>console.anthropic.com</strong> 申请 Key。API 路径解锁无限制按 token 计费的灵活用量，配合缓存机制可节省 80%+ 成本。</p>
+  <div class="steps">
+    <div class="step"><div class="step-n">1</div><div class="step-body"><div class="step-title">申请 API Key</div><div class="step-desc">console.anthropic.com → API Keys → Create Key。命名建议加前缀：<code>proj-sichuan-analysis</code>。Key 只显示一次，立即复制保存。</div></div></div>
+    <div class="step"><div class="step-n">2</div><div class="step-body"><div class="step-title">安全存储——必须用环境变量</div><div class="step-desc">
+      <strong>绝对禁止</strong>将 Key 写入代码或上传任何平台。正确做法：<br>
+      macOS/Linux：<code>echo 'export ANTHROPIC_API_KEY="sk-ant-..."' &gt;&gt; ~/.zshrc &amp;&amp; source ~/.zshrc</code><br>
+      Windows：系统设置 → 环境变量 → 新建 ANTHROPIC_API_KEY<br>
+      代码中读取：<code>import os; key = os.environ["ANTHROPIC_API_KEY"]</code>
+    </div></div></div>
+    <div class="step"><div class="step-n">3</div><div class="step-body"><div class="step-title">设置预算上限</div><div class="step-desc">console.anthropic.com → Billing → Spend limits：月度硬上限（如 $30）+ 软提醒（$20 时邮件通知）。</div></div></div>
+  </div>
+  <div class="sop">
+    <div class="sop-head" onclick="toggleSop(this)"><span>💡 缓存机制：节省 80%+ 成本（点击展开）</span><span class="sop-arrow">▶</span></div>
+    <div class="sop-body">
+      <div class="code" style="background:#1a0a2e;color:#d0b8f5;font-size:12px">
+# 缓存前：100K tokens × $3/MTok = $0.30<br>
+# 缓存后：10K uncached × $3 + 90K cached × $0.30 = $0.057<br>
+# 节省：81%<br><br>
+# Claude Code 会话自动缓存 CLAUDE.md，无需额外配置<br>
+# API 调用中显式启用缓存：<br>
+response = client.messages.create(<br>
+&nbsp;&nbsp;model="claude-sonnet-4-6",<br>
+&nbsp;&nbsp;system=[{"type":"text","text":"...","cache_control":{"type":"ephemeral"}}],<br>
+&nbsp;&nbsp;messages=[...]<br>
+)
+      </div>
+    </div>
+  </div>
+  <div class="callout callout-warn"><strong>⚠ 安全：</strong>API Key 等同账号密码。泄露后立即在 console.anthropic.com 撤销（Revoke）并重新生成。</div>
+</section>
+
+<section id="config-claudecode" class="sec">
+  <span class="bc">PART 01 · 配置 — Claude Code CLI</span>
+  <h2 class="sec-title">路径三：Claude Code CLI SOP</h2>
+  <p class="sec-lead">Claude Code CLI 在本地终端运行，读取当前目录文件，用自然语言驱动代码生成和执行。适合数据分析、脚本自动化、大文件操作。</p>
+  <div class="sop">
+    <div class="sop-head" onclick="toggleSop(this)"><span>📦 安装步骤（点击展开）</span><span class="sop-arrow">▶</span></div>
+    <div class="sop-body">
+      <div class="steps">
+        <div class="step"><div class="step-n">1</div><div class="step-body"><div class="step-title">安装 Node.js（≥18）</div><div class="step-desc">nodejs.org 下载 LTS。验证：<code>node --version</code></div></div></div>
+        <div class="step"><div class="step-n">2</div><div class="step-body"><div class="step-title">安装 Claude Code</div><div class="step-desc"><code>npm install -g @anthropic-ai/claude-code</code><br>验证：<code>claude --version</code></div></div></div>
+        <div class="step"><div class="step-n">3</div><div class="step-body"><div class="step-title">配置 API Key</div><div class="step-desc">确保已设置环境变量 <code>ANTHROPIC_API_KEY</code>（见路径二）。</div></div></div>
+        <div class="step"><div class="step-n">4</div><div class="step-body"><div class="step-title">进入项目目录启动</div><div class="step-desc"><code>cd /path/to/project</code> → <code>claude</code><br>启动后运行 <code>/init</code> 自动生成 CLAUDE.md。</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-title" style="margin:18px 0 10px">⌨ 常用斜杠命令速查</div>
+  <table class="tbl">
+    <thead><tr><th>命令</th><th>作用</th><th>使用时机</th></tr></thead>
+    <tbody>
+      <tr><td class="td-b">/init</td><td>自动生成 CLAUDE.md</td><td>新项目第一次启动</td></tr>
+      <tr><td class="td-b">/clear</td><td>清除对话历史（保留 CLAUDE.md）</td><td>任务切换时节省 token</td></tr>
+      <tr><td class="td-b">/compact</td><td>压缩上下文，保留关键信息</td><td>会话过长时</td></tr>
+      <tr><td class="td-b">/model</td><td>切换模型（Sonnet / Opus / Haiku）</td><td>任务复杂度变化时</td></tr>
+      <tr><td class="td-b">/cost</td><td>查看当前会话 token 消耗</td><td>成本控制</td></tr>
+      <tr><td class="td-b">/schedule</td><td>创建定时 Routine</td><td>设置自动化任务</td></tr>
+      <tr><td class="td-b">/stop</td><td>停止当前 agent 任务</td><td>发现方向错误时立即中止</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="config-vscode" class="sec">
+  <span class="bc">PART 01 · 配置 — VS Code 扩展</span>
+  <h2 class="sec-title">路径四：VS Code 扩展 SOP</h2>
+  <p class="sec-lead">在 VS Code 中边写边问。Claude Code 官方 VS Code 扩展与 CLI 共享 API Key 和 CLAUDE.md 上下文，JetBrains 同样支持。</p>
+  <div class="steps">
+    <div class="step"><div class="step-n">1</div><div class="step-body"><div class="step-title">安装 VS Code</div><div class="step-desc">code.visualstudio.com 下载安装。</div></div></div>
+    <div class="step"><div class="step-n">2</div><div class="step-body"><div class="step-title">安装 Claude Code 扩展</div><div class="step-desc">扩展市场搜索「Claude Code」（Anthropic 官方），用 API Key 或 Claude 账号登录。</div></div></div>
+    <div class="step"><div class="step-n">3</div><div class="step-body"><div class="step-title">安装 Python 扩展 + 项目依赖</div><div class="step-desc">扩展市场安装「Python」（Microsoft 官方），终端运行：<code>pip install pandas matplotlib openpyxl seaborn python-docx</code></div></div></div>
+  </div>
+</section>
+
+<!-- PART 02 -->
+<div class="part-banner" data-part="02">
+  <div class="pb-label">PART 02</div>
+  <div class="pb-title">Claude.ai 功能与项目场景</div>
+  <div class="pb-desc">Claude.ai 是协作和理解的主阵地。注意功能名称：Claude 的深度研究叫 Research（不是 Deep Research）；定时任务叫 Scheduled Tasks（在 Desktop App 的 Cowork 里，不是浏览器版）。</div>
+  <div class="pb-tags">
+    <span class="pb-tag">Projects</span><span class="pb-tag">Research</span>
+    <span class="pb-tag">文件分析</span><span class="pb-tag">Scheduled Tasks</span><span class="pb-tag">写作</span>
+  </div>
+</div>
+
+<!-- PROJECTS -->
+<section id="claude-projects" class="sec">
+  <span class="bc">PART 02 · Claude.ai — Projects</span>
+  <h2 class="sec-title">Projects：长期项目知识库</h2>
+  <p class="sec-lead">Projects 把文件、Custom Instructions 和对话历史集中在同一项目上下文里。AI 始终"记得"你的项目背景，不用每次重新解释是什么项目、什么客户、什么口径。</p>
+
+  <div class="where-box">
+    <div class="where-icon">📍</div>
+    <div class="where-body">
+      <div class="where-title">在哪里找</div>
+      <div class="where-desc">Claude.ai 浏览器版 + Desktop App 均有。左侧边栏 → Projects（或「+ New project」）。</div>
+      <div class="where-path">claude.ai → 左侧边栏 → Projects</div>
+    </div>
+  </div>
+
+  <div class="grid-2" style="margin-top:14px">
+    <div class="card tp">
+      <div class="card-title">✅ 适合的项目任务</div>
+      <div class="card-desc" style="margin-top:8px;line-height:1.9">
+        • 政府咨询——周期长、资料多、多版本报告<br>
+        • 长期访谈研究——多轮记录归档交叉分析<br>
+        • 多人协作——统一口径、格式和客户要求<br>
+        • 周报 / 月报——基于同一背景持续更新
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">📁 推荐文件组织</div>
+      <div class="card-desc" style="margin-top:8px;line-height:1.9">
+        • 合同 / 项目方案（确定范围和口径）<br>
+        • 访谈提纲 + 记录（按日期命名）<br>
+        • 政策文件（政策名称 + 发布年份）<br>
+        • 报告模板（确定格式标准）<br>
+        • 客户反馈 / 历次沟通纪要
+      </div>
+    </div>
+  </div>
+  <div class="callout callout-warn"><strong>文件安全：</strong>禁止上传含客户个人隐私、涉密数据、合同金额的原始文件。优先上传脱敏摘要版本。</div>
+</section>
+
+<!-- RESEARCH -->
+<section id="claude-research" class="sec">
+  <span class="bc">PART 02 · Claude.ai — Research</span>
+  <h2 class="sec-title">Research：带来源的深度研究</h2>
+  <p class="sec-lead">这个功能在 Claude.ai 里叫 <strong>Research</strong>（不是 Deep Research）。它结合网页搜索、Google Workspace 和已连接集成，自主规划研究路径，多步检索后生成带来源引用的研究报告。</p>
+
+  <div class="where-box">
+    <div class="where-icon">📍</div>
+    <div class="where-body">
+      <div class="where-title">在哪里找</div>
+      <div class="where-desc">新建对话 → 输入框左侧工具栏 → Research 图标（或选择 Research 模式）。需要 Pro/Max/Team/Enterprise 计划，Free 账号无此功能。</div>
+      <div class="where-path">claude.ai → 新对话 → 工具栏 → Research</div>
+    </div>
+  </div>
+
+  <div class="grid-2" style="margin-top:14px">
+    <div class="card tp">
+      <div class="card-title">✅ 适用场景</div>
+      <div class="card-desc" style="margin-top:8px;line-height:1.9">
+        • 政策梳理：某领域近三年政策演变<br>
+        • 行业数据：市场规模、增速、区域分布<br>
+        • 竞品 / 对标：其他地区典型案例<br>
+        • 证据收集：可写入报告的可引用事实<br>
+        • 支持 Google Workspace 文件检索
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">⚠️ 使用要求</div>
+      <div class="card-desc" style="margin-top:8px;line-height:1.9">
+        • 必须要求"列出来源 URL 和发布时间"<br>
+        • 区分"事实陈述"和"AI 判断 / 推断"<br>
+        • 关键数据写报告前点进原始链接核实<br>
+        • Research 结论不得直接写进正式报告
+      </div>
+    </div>
+  </div>
+
+  <div class="sop">
+    <div class="sop-head" onclick="toggleSop(this)"><span>📝 Research 提示词模板（点击展开）</span><span class="sop-arrow">▶</span></div>
+    <div class="sop-body">
+      <div class="code" style="background:#1a0a2e;color:#d0b8f5;font-size:12px">
+请围绕【四川省餐饮个体工商户参与新消费场景】执行研究任务：<br><br>
+1. 检索近三年（2022-2024）相关政策文件<br>
+   输出：政策名称 | 发布机关 | 发布时间 | 核心内容（1句）<br><br>
+2. 汇总行业规模数据（市场规模 / 商户数量 / 增速）<br>
+   每条数据必须标注：来源机构 | 统计口径 | 发布时间 | URL<br><br>
+3. 整理四川省内典型案例（≥3个）<br>
+   地区 | 案例名称 | 核心做法 | 来源<br><br>
+输出格式：<br>
+① 研究摘要（200字以内）<br>
+② 证据表（来源 | 核心信息 | 时间 | URL）<br>
+③ 可写入报告的核心观点（3-5条，区分"事实"和"判断"）<br><br>
+注意：不确定的内容请注明"待核实"，不得编造数据。
+      </div>
+    </div>
+  </div>
+  <div class="callout"><strong>使用逻辑：</strong>Research 做广度检索 + 结构化汇总，人工做关键数据核实。AI 省去搜索整理时间，核实工作仍需人来做。</div>
+</section>
+
+<!-- DATA ANALYSIS -->
+<section id="claude-data" class="sec">
+  <span class="bc">PART 02 · Claude.ai — 文件与数据分析</span>
+  <h2 class="sec-title">文件分析：上传即可读取、清洗、生成图表</h2>
+  <p class="sec-lead">直接上传 Excel、PDF、Word、CSV、图片，Claude 直接读取分析——生成统计表、交叉分析、图表和结论，无需提前写脚本。适合快速探索和初步分析。</p>
+
+  <div class="where-box">
+    <div class="where-icon">📍</div>
+    <div class="where-body">
+      <div class="where-title">在哪里找</div>
+      <div class="where-desc">新建对话 → 输入框左侧回形针图标（Attach files）→ 上传文件后直接提问。或在 Project 对话中上传。</div>
+      <div class="where-path">claude.ai → 任意对话 → 📎 上传文件</div>
+    </div>
+  </div>
+
+  <div class="sop" style="margin-top:14px">
+    <div class="sop-head" onclick="toggleSop(this)"><span>📊 问卷数据清洗五步流程（点击展开）</span><span class="sop-arrow">▶</span></div>
+    <div class="sop-body">
+      <div class="steps">
+        <div class="step"><div class="step-n">1</div><div class="step-body"><div class="step-title">上传文件 + 说明背景</div><div class="step-desc">「这是问卷星导出的 Excel，A 列是编号，B-F 是李克特量表 1-5 分，G-H 是开放问答。」</div></div></div>
+        <div class="step"><div class="step-n">2</div><div class="step-body"><div class="step-title">要求先做数据质检</div><div class="step-desc">「先检查：① 有效行数，② 完全空白行，③ 量表列超出 1-5 的异常值，④ 重复编号。」</div></div></div>
+        <div class="step"><div class="step-n">3</div><div class="step-body"><div class="step-title">分组统计</div><div class="step-desc">「按 A 列行业分组，计算 B-F 均值，输出表格，说明各组差异是否显著。」</div></div></div>
+        <div class="step"><div class="step-n">4</div><div class="step-body"><div class="step-title">生成图表</div><div class="step-desc">「基于分组结果生成柱状图，蓝紫色系，每组标注样本量 n=xx。」</div></div></div>
+        <div class="step"><div class="step-n">5</div><div class="step-body"><div class="step-title">输出分析结论</div><div class="step-desc">「3-5 句描述核心发现，区分'数据事实'和'可能解释'，避免过度推论。」</div></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="callout callout-warn"><strong>数据安全：</strong>上传前确认无客户姓名、手机号、身份证等个人信息。问卷数据建议先在本地删除个人标识列。</div>
+</section>
+
+<!-- SCHEDULED TASKS -->
+<section id="claude-scheduled" class="sec">
+  <span class="bc">PART 02 · Claude.ai — Scheduled Tasks</span>
+  <h2 class="sec-title">Scheduled Tasks：定时自动化任务</h2>
+  <p class="sec-lead">Claude 的定时功能叫 <strong>Scheduled Tasks</strong>，在 <strong>Claude Desktop App 的 Cowork 标签</strong>里，不在浏览器版 claude.ai 里。它让 Claude 按你设定的时间自动执行任务并保存结果到本地文件夹。</p>
+
+  <div class="where-box">
+    <div class="where-icon">📍</div>
+    <div class="where-body">
+      <div class="where-title">在哪里找（重要：必须用 Desktop App）</div>
+      <div class="where-desc">下载 Claude Desktop App → 顶部 Tab → Cowork → 左侧边栏 → Scheduled → + New Task。<br>注意：电脑必须开机并唤醒，任务才能运行。</div>
+      <div class="where-path">Claude Desktop App → Cowork 标签 → Scheduled</div>
+    </div>
+  </div>
+
+  <table class="tbl" style="margin-top:14px">
+    <thead><tr><th>类型</th><th>设置方式</th><th>项目典型用法</th></tr></thead>
+    <tbody>
+      <tr><td class="td-b">固定时间</td><td>选择日期 + 时间，单次执行</td><td>「2024-11-30 09:00，提醒整理中期报告材料」</td></tr>
+      <tr><td class="td-b">周期性</td><td>每天 / 每周几 / 每月</td><td>「每周五 15:00，整理本周项目进展并生成周报草稿」</td></tr>
+      <tr><td class="td-b">手动触发</td><td>Frequency 选 Manual，随时点击运行</td><td>需要时手动触发，结果保存到指定文件夹</td></tr>
+    </tbody>
+  </table>
+
+  <div class="sop">
+    <div class="sop-head" onclick="toggleSop(this)"><span>💡 Scheduled Task 提示词示例（点击展开）</span><span class="sop-arrow">▶</span></div>
+    <div class="sop-body">
+      <div class="code" style="background:#1a0a2e;color:#d0b8f5;font-size:12px">
+# 每周周报生成（每周五 16:00）<br>
+任务名称：weekly-report<br>
+提示词：<br>
+读取桌面/项目文件夹/本周会议纪要，整理本周项目进展，<br>
+生成一份周报草稿，格式：<br>
+- 本周完成事项<br>
+- 下周计划<br>
+- 待确认事项<br>
+- 风险提示<br>
+将结果保存为：桌面/周报/2024-W47-周报草稿.md<br><br>
+# 注意：提示词末尾建议加<br>
+"并写一份 what-changed.md 记录本次执行的所有操作"<br>
+# 这样可以审计每次自动执行的内容
+      </div>
+    </div>
+  </div>
+  <div class="callout"><strong>注意事项：</strong>Scheduled Tasks 在电脑关机或睡眠时不运行。如需电脑关机时也能执行，需要升级到 Claude Code Routines（云端运行，见 Part 03）。</div>
+</section>
+
+<!-- WRITING -->
+<section id="claude-writing" class="sec">
+  <span class="bc">PART 02 · Claude.ai — 写作</span>
+  <h2 class="sec-title">写作与文档协作</h2>
+  <p class="sec-lead">Claude 在长文档写作和迭代上尤其出色——1M token 上下文意味着整份报告可以放在一个会话中反复修改，不再因上下文丢失而前后不一致。</p>
+  <div class="sop">
+    <div class="sop-head" onclick="toggleSop(this)"><span>📝 报告初稿四步法（点击展开）</span><span class="sop-arrow">▶</span></div>
+    <div class="sop-body">
+      <div class="steps">
+        <div class="step"><div class="step-n">1</div><div class="step-body"><div class="step-title">提供结构框架</div><div class="step-desc">先给 Claude 报告大纲，让它理解整体逻辑再开始写作。</div></div></div>
+        <div class="step"><div class="step-n">2</div><div class="step-body"><div class="step-title">分章节生成，单独检查</div><div class="step-desc">「先生成第二章'现状分析'，基于以下数据点：...」每章独立生成、独立检查。</div></div></div>
+        <div class="step"><div class="step-n">3</div><div class="step-body"><div class="step-title">局部修改</div><div class="step-desc">「这段太学术化，改成口语化的政府报告风格」——针对段落而非全文重写。</div></div></div>
+        <div class="step"><div class="step-n">4</div><div class="step-body"><div class="step-title">全文风格检查</div><div class="step-desc">「检查全文表达是否一致，同一指标是否用了不同称呼」</div></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="callout callout-warn"><strong>核心原则：</strong>AI 辅助表达，不生产结论。政策数据、金额、排名、时间口径必须人工复核。报告结论必须基于真实访谈 / 数据，不得由 AI 单独生成。</div>
+</section>
+
+<!-- PART 03 -->
+<div class="part-banner" data-part="03">
+  <div class="pb-label">PART 03</div>
+  <div class="pb-title">Claude Code 功能与项目场景</div>
+  <div class="pb-desc">Claude Code 是执行层——读取本地文件、生成代码、运行脚本、管理 Git。CLAUDE.md 定义规则，Skills 封装能力，Subagents 并行加速，Routines 在云端定时自动化。</div>
+  <div class="pb-tags">
+    <span class="pb-tag">CLI 工作流</span><span class="pb-tag">CLAUDE.md</span>
+    <span class="pb-tag">Skills</span><span class="pb-tag">Subagents</span>
+    <span class="pb-tag">Plan Mode</span><span class="pb-tag">Routines</span>
+  </div>
+</div>
+
+<!-- CC CORE -->
+<section id="cc-core" class="sec">
+  <span class="bc">PART 03 · Claude Code — CLI 工作流</span>
+  <h2 class="sec-title">CLI 核心工作流：从意图到可执行结果</h2>
+  <p class="sec-lead">Claude Code 读取整个项目目录、理解文件间关系，用自然语言驱动真实的代码生成和本地执行。</p>
+  <div class="flow">
+    <div class="flow-step"><div class="flow-n">描述</div><div class="flow-title">自然语言说需求</div><div class="flow-desc">"清洗 data.xlsx，去空行，按地区分组统计均值"</div></div>
+    <div class="flow-step"><div class="flow-n">规划</div><div class="flow-title">Plan Mode 确认</div><div class="flow-desc">Shift+Tab 进入 Plan Mode，审阅执行计划</div></div>
+    <div class="flow-step"><div class="flow-n">生成</div><div class="flow-title">Claude 写代码</div><div class="flow-desc">读取目录文件，生成 .py 脚本</div></div>
+    <div class="flow-step"><div class="flow-n">运行</div><div class="flow-title">本地执行</div><div class="flow-desc">直接运行，查看输出或报错</div></div>
+    <div class="flow-step"><div class="flow-n">验收</div><div class="flow-title">三项必检</div><div class="flow-desc">行数 / 数值范围 / 输出格式是否正确</div></div>
+  </div>
+  <div class="grid-2" style="margin-top:14px">
+    <div class="card tp">
+      <div class="card-title">Claude Code 核心能力</div>
+      <div class="card-desc" style="margin-top:8px;line-height:1.9">• 读取理解本地项目所有文件<br>• 生成 Python / Bash / SQL 脚本<br>• 直接执行代码，返回结果<br>• 读取、修改、创建文件<br>• 执行 Git 命令<br>• 后台运行长任务，完成后通知</div>
+    </div>
+    <div class="card">
+      <div class="card-title">何时选 Claude Code vs Claude.ai</div>
+      <div class="card-desc" style="margin-top:8px;line-height:1.9">
+        <strong>选 Claude.ai：</strong>对话理解 / Research / 文件阅读 / 写作润色<br><br>
+        <strong>选 Claude Code：</strong>需要执行代码 / 操作本地文件 / 数据清洗 / 批量处理<br><br>
+        <strong>最佳组合：</strong>Claude.ai 想清楚方案 → Claude Code 执行
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CLAUDE.MD -->
+<section id="cc-claude-md" class="sec">
+  <span class="bc">PART 03 · Claude Code — CLAUDE.md</span>
+  <h2 class="sec-title">CLAUDE.md：项目规则文件</h2>
+  <p class="sec-lead">CLAUDE.md 是 Claude Code 的"宪法"——每次启动自动注入，告诉 AI 这个项目的数据口径、命名规范、禁止事项和输出格式。团队共享一个 CLAUDE.md，行为保持一致。</p>
+
+  <div class="where-box">
+    <div class="where-icon">📍</div>
+    <div class="where-body">
+      <div class="where-title">在哪里找 / 创建</div>
+      <div class="where-desc">在项目根目录运行 <code>/init</code>，Claude Code 自动生成 CLAUDE.md 模板。手动创建也可以，文件命名必须是 CLAUDE.md，放在项目根目录。</div>
+      <div class="where-path">项目根目录 / CLAUDE.md</div>
+    </div>
+  </div>
+
+  <div class="callout callout-warn" style="margin-top:12px"><strong>⚠ 成本提示：</strong>CLAUDE.md 每次请求都会注入。保持 200 行以内，只写可验证的规则，不写"愿望"和"建议"。每多 1000 token，每次请求增加约 $0.003（Sonnet）的隐性成本。</div>
+  <div class="sop">
+    <div class="sop-head" onclick="toggleSop(this)"><span>📋 CLAUDE.md 完整模板（点击展开）</span><span class="sop-arrow">▶</span></div>
+    <div class="sop-body">
+      <div class="code" style="background:#1a0a2e;color:#d0b8f5;font-size:11.5px">
+# CLAUDE.md — 四川餐饮个体工商户动态监测项目<br><br>
+## 项目背景<br>
+研究四川省餐饮类个体工商户的经营状态与政策支持。<br>
+数据来源：问卷调查（n=312）、政策文件、统计年鉴。<br><br>
+## 数据口径<br>
+- 个体工商户：工商部门登记的非法人主体<br>
+- 餐饮类：仅 GB/T 4754-2017 C 大类餐饮服务<br>
+- 时间口径：2021-2023 年为实际数据，2024 年为预估值（须标注）<br><br>
+## 构建与运行命令<br>
+- 数据清洗：python scripts/clean_data.py --input data/原始 --output data/清洗后<br>
+- 生成图表：python scripts/generate_charts.py<br>
+- 测试：pytest tests/<br><br>
+## 文件命名规范<br>
+- 原始数据：data/原始/[来源]_[日期].xlsx（只读，禁止修改）<br>
+- 清洗后：data/清洗后/[版本]_[日期].xlsx<br>
+- 输出图表：output/[类型]_[日期].png<br><br>
+## 禁止事项<br>
+- 禁止编造任何统计数据或政策内容<br>
+- 禁止将原始问卷的个人信息（姓名/手机）写入输出<br>
+- 禁止删除或覆盖 data/原始/ 目录下的任何文件<br>
+- 禁止在没有数据支撑的情况下生成"研究结论"<br><br>
+## 输出格式<br>
+- 统计表：xlsx，A1 注明数据来源和统计时间<br>
+- 图表：png，300dpi，含标题、轴标签、样本量标注<br>
+- 代码：每个函数含一行注释说明目的<br><br>
+## 并行限制<br>
+- 最多同时启动 3 个 subagent<br>
+- subagent 仅读取权限，编辑由主 agent 处理
+      </div>
+    </div>
+  </div>
+  <div class="callout"><strong>最佳实践：</strong>把 CLAUDE.md 提交到 Git 仓库，团队共享同一份规则。专项任务的专用指令放进 Skills，不要塞进 CLAUDE.md。</div>
+</section>
+
+<!-- SKILLS -->
+<section id="cc-skills" class="sec">
+  <span class="bc">PART 03 · Claude Code — Skills</span>
+  <h2 class="sec-title">Skills：封装可复用的任务能力</h2>
+  <p class="sec-lead">Skills 存放在 <code>.claude/skills/&lt;name&gt;/</code> 下的 SKILL.md 文件 + 辅助脚本。它封装有真实域逻辑的任务，<strong>按需加载</strong>——不像 CLAUDE.md 每次都注入，只在被调用时消耗 token。</p>
+
+  <div class="where-box">
+    <div class="where-icon">📍</div>
+    <div class="where-body">
+      <div class="where-title">在哪里创建</div>
+      <div class="where-desc">在项目根目录下创建 <code>.claude/skills/技能名称/SKILL.md</code> 文件。Claude Code 启动时自动发现所有 Skills。</div>
+      <div class="where-path">.claude/skills/data-quality-check/SKILL.md</div>
+    </div>
+  </div>
+
+  <div class="grid-2" style="margin-top:14px">
+    <div class="card tp">
+      <div class="card-title">何时用 Skill vs CLAUDE.md vs Slash Command</div>
+      <div class="card-desc" style="margin-top:8px;line-height:1.9">
+        <strong>CLAUDE.md：</strong>项目通用规则（口径、禁止事项、命名规范）<br><br>
+        <strong>Skill：</strong>特定任务专用逻辑（有参数和辅助文件）<br><br>
+        <strong>Slash Command：</strong>简单的提示词模板（无需参数和复杂逻辑）
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">适合封装为 Skill 的任务</div>
+      <div class="card-desc" style="margin-top:8px;line-height:1.9">
+        • 问卷数据质检（缺失值/异常值检查）<br>
+        • 标准分组统计（按行业/地区/规模）<br>
+        • 热力图生成（参数化颜色和维度）<br>
+        • Word 报告批量格式化<br>
+        • 多文件合并去重
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SUBAGENTS -->
+<section id="cc-agents" class="sec">
+  <span class="bc">PART 03 · Claude Code — Subagents</span>
+  <h2 class="sec-title">Subagents：并行执行隔离任务</h2>
+  <p class="sec-lead">Subagent 是独立的 Claude 会话，有自己的上下文窗口。适合需要上下文隔离或并行加速的任务——但成本随并行数线性增加，必须谨慎使用。</p>
+  <div class="grid-2">
+    <div class="card tp">
+      <div class="card-title">Subagent 最适合的场景</div>
+      <div class="card-desc" style="margin-top:8px;line-height:1.9">
+        • 同时处理 10 份访谈记录摘要提取<br>
+        • 并行运行多个数据分析脚本<br>
+        • 代码审查与功能开发同步进行<br>
+        • 大型任务分解为独立子任务并行执行
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">⚠️ 成本控制要点</div>
+      <div class="card-desc" style="margin-top:8px;line-height:1.9">
+        • 10 个并行 subagent = 10x token 消耗<br>
+        • 在 CLAUDE.md 中限制最大并行数（建议 ≤3）<br>
+        • 简单任务的 subagent 用 Haiku 降成本<br>
+        • 任务完成后立即 <code>/stop</code>，避免空跑
+      </div>
+    </div>
+  </div>
+  <div class="callout callout-warn"><strong>⚠ 成本警示：</strong>Max 20x 计划才能支持大量并行。Pro 计划并行 3 个以上 subagent 会快速耗尽每日额度。</div>
+</section>
+
+<!-- PLAN MODE -->
+<section id="cc-planmode" class="sec">
+  <span class="bc">PART 03 · Claude Code — Plan Mode &amp; 验收</span>
+  <h2 class="sec-title">Plan Mode、验收与回滚</h2>
+  <p class="sec-lead">Claude Code 会真实执行文件操作，养成"先规划再执行、执行后验收、出错能回滚"的三步习惯。</p>
+  <div class="steps">
+    <div class="step"><div class="step-n" style="background:var(--purple)">规划</div><div class="step-body">
+      <div class="step-title">Plan Mode：先看计划再执行</div>
+      <div class="step-desc">复杂任务前按 <strong>Shift+Tab</strong> 进入 Plan Mode。Claude 先分析项目结构、列出执行计划，你确认无误后再执行。</div>
+    </div></div>
+    <div class="step"><div class="step-n" style="background:var(--teal)">验收</div><div class="step-body">
+      <div class="step-title">三项必检</div>
+      <div class="step-desc">① <strong>行数</strong>——输出行数与原数据是否一致；② <strong>数值范围</strong>——统计量是否在合理区间；③ <strong>文件可打开</strong>——格式是否正确、内容是否完整。</div>
+    </div></div>
+    <div class="step"><div class="step-n" style="background:var(--orange)">回滚</div><div class="step-body">
+      <div class="step-title">保留原始文件 + Escape 退出</div>
+      <div class="step-desc">运行前备份：<code>data_原始.xlsx</code>（只读禁止删除）。发现问题：<strong>Escape 两次</strong>中止，从原始文件重跑。Git 项目可用 <code>git stash</code> 回滚。</div>
+    </div></div>
+  </div>
+</section>
+
+<!-- ROUTINES -->
+<section id="cc-routines" class="sec">
+  <span class="bc">PART 03 · Claude Code — Routines</span>
+  <h2 class="sec-title">Routines：云端定时自动化</h2>
+  <p class="sec-lead">Routines 是 Claude Code 的云端定时任务（区别于 Cowork 的 Scheduled Tasks）：不需要电脑开机，在 Anthropic 服务器上运行，支持定时触发、Webhook、GitHub 事件多种方式。</p>
+
+  <div class="where-box">
+    <div class="where-icon">📍</div>
+    <div class="where-body">
+      <div class="where-title">在哪里找</div>
+      <div class="where-desc">浏览器访问 claude.ai/code/routines，或在 Claude Code CLI 中用 /schedule 命令创建。需要 Pro/Max/Team/Enterprise 计划并开启 Claude Code。</div>
+      <div class="where-path">claude.ai/code/routines &nbsp;|&nbsp; CLI：/schedule</div>
+    </div>
+  </div>
+
+  <table class="tbl" style="margin-top:14px">
+    <thead><tr><th>触发方式</th><th>说明</th><th>典型用法</th></tr></thead>
+    <tbody>
+      <tr><td class="td-b">定时触发</td><td>设定 cron 周期（每天/每周/每月）</td><td>「每天早 9 点，汇总昨日政策新闻」</td></tr>
+      <tr><td class="td-b">Webhook 触发</td><td>外部系统 POST 到专属 URL</td><td>表单提交 → 自动生成提案草稿</td></tr>
+      <tr><td class="td-b">GitHub 触发</td><td>响应 PR / Release 等 Git 事件</td><td>每次 PR 自动触发代码审查</td></tr>
+    </tbody>
+  </table>
+
+  <div class="grid-2" style="margin-top:14px">
+    <div class="card tp">
+      <div class="card-title">Routines vs Scheduled Tasks</div>
+      <div class="card-desc" style="margin-top:8px;line-height:1.9">
+        <strong>Scheduled Tasks（Cowork Desktop）：</strong><br>
+        · 本地运行，访问本地文件<br>
+        · 电脑必须开机<br>
+        · 在 Desktop App → Cowork → Scheduled<br><br>
+        <strong>Routines（Claude Code 云端）：</strong><br>
+        · 云端运行，访问配置的 Git 仓库<br>
+        · 无需电脑开机<br>
+        · 在 claude.ai/code/routines
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">项目组推荐用法</div>
+      <div class="card-desc" style="margin-top:8px;line-height:1.9">
+        • 政策监测：每天早 9 点搜索最新政策动态<br>
+        • 周报生成：每周五下午从 Git 仓库读取访谈记录，生成周报<br>
+        • 代码审查：每次 PR 自动触发质量检查<br>
+        • 数据同步：定期从外部系统拉取数据更新
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SCENARIO MAP -->
+<section id="scenario-map" class="sec">
+  <span class="bc">PART 03 · 功能场景总表</span>
+  <h2 class="sec-title">功能场景总表</h2>
+  <p class="sec-lead">10 个核心功能的适用场景、最佳组合与交付产出一览。</p>
+  <table class="tbl">
+    <thead><tr><th>功能</th><th>正确名称 / 位置</th><th>最适合的项目任务</th><th>可交付产出</th></tr></thead>
+    <tbody>
+      <tr><td class="td-b">Projects</td><td>claude.ai → 左侧边栏</td><td>长期项目知识库、口径沉淀、多轮报告</td><td>项目知识库、周报、汇报材料</td></tr>
+      <tr><td class="td-b">Research</td><td>claude.ai → 对话工具栏</td><td>政策梳理、行业研究、竞品对标</td><td>带来源研究摘要 + 证据表</td></tr>
+      <tr><td class="td-b">文件分析</td><td>claude.ai → 📎 上传</td><td>问卷清洗、统计分析、PDF 抽取</td><td>清洗后 Excel + 统计图表</td></tr>
+      <tr><td class="td-b">Scheduled Tasks</td><td>Desktop App → Cowork → Scheduled</td><td>节点提醒、政策监测、周报触发</td><td>定时保存到本地文件夹的输出</td></tr>
+      <tr><td class="td-b">写作 / 文档</td><td>claude.ai → 任意对话</td><td>报告初稿、访谈摘要、PPT 讲稿</td><td>可直接修改的草稿文本</td></tr>
+      <tr><td class="td-b">Claude Code CLI</td><td>终端：claude 命令</td><td>数据脚本、批量处理、图表自动化</td><td>.py 脚本 + Excel/PNG 输出</td></tr>
+      <tr><td class="td-b">CLAUDE.md</td><td>项目根目录 CLAUDE.md</td><td>团队规则统一、数据口径固化</td><td>可复用的项目规范文件</td></tr>
+      <tr><td class="td-b">Skills</td><td>.claude/skills/&lt;name&gt;/SKILL.md</td><td>流程标准化、团队能力共享</td><td>可调用的 Skill 库</td></tr>
+      <tr><td class="td-b">Subagents</td><td>Claude Code 内自动调用</td><td>并行访谈摘要、多文件同时处理</td><td>并行输出合并结果</td></tr>
+      <tr><td class="td-b">Routines</td><td>claude.ai/code/routines</td><td>云端定时自动化、不依赖电脑开机</td><td>定时执行的分析报告/代码任务</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- PART 04 -->
+<div class="part-banner" data-part="04">
+  <div class="pb-label">PART 04</div>
+  <div class="pb-title">最佳案例：Python 生成热力图</div>
+  <div class="pb-desc">配置 CLAUDE.md → 用 Claude Code 生成数据清洗脚本 → Plan Mode 确认 → 运行热力图 → 验收输出。从 0 到 1 的完整操作过程。</div>
+  <div class="pb-tags"><span class="pb-tag">CLAUDE.md 配置</span><span class="pb-tag">Sonnet 4.6（默认）</span><span class="pb-tag">Plan Mode</span><span class="pb-tag">运行 → 验收 → 迭代</span></div>
+</div>
+
+<section id="case-flow" class="sec">
+  <span class="bc">PART 04 · 案例 — 操作流程</span>
+  <h2 class="sec-title">四步操作流程：从环境到交付</h2>
+  <p class="sec-lead">不懂 Python 的同事也可以完成。每步有具体命令和验收标准。</p>
+  <div class="grid-2">
+    <div class="card tp"><div class="card-num">1</div><div class="card-title">准备环境</div><div class="card-desc"><code>pip install pandas matplotlib openpyxl seaborn</code><br>验证：<code>python --version</code> 应返回 3.8+</div></div>
+    <div class="card"><div class="card-num">2</div><div class="card-title">创建 CLAUDE.md</div><div class="card-desc">在项目目录运行 <code>claude</code> → <code>/init</code>，补充数据口径和禁止事项。</div></div>
+    <div class="card"><div class="card-num">3</div><div class="card-title">Plan Mode + 生成脚本</div><div class="card-desc">Shift+Tab 进入 Plan Mode，描述需求，确认后生成 <code>heatmap.py</code>，运行 <code>python heatmap.py</code>。</div></div>
+    <div class="card"><div class="card-num">4</div><div class="card-title">验收与迭代</div><div class="card-desc">检查输出 PNG：轴标签 / 数值 / 颜色。用自然语言反馈："X 轴改为季度"——Claude Code 直接修改代码。</div></div>
+  </div>
+  <div class="callout"><strong>环境备忘：</strong><code>pip install pandas matplotlib openpyxl seaborn</code> → <code>claude</code> → <code>/init</code> → Shift+Tab（Plan Mode）→ <code>python heatmap.py</code></div>
+</section>
+
+<section id="case-prompt" class="sec">
+  <span class="bc">PART 04 · 案例 — CLAUDE.md + 提示词</span>
+  <h2 class="sec-title">案例 CLAUDE.md + 六要素提示词</h2>
+  <div class="grid-2">
+    <div class="card tp">
+      <div class="card-title">案例 CLAUDE.md（精简版）</div>
+      <div class="code" style="margin-top:10px;background:#1a0a2e;color:#d0b8f5;font-size:11.5px">
+# 热力图案例项目<br><br>
+## 命令<br>
+运行：python heatmap.py --output output/<br>
+测试：python -m pytest tests/<br><br>
+## 规范<br>
+- 输出：PNG 300dpi，含标题轴标签<br>
+- data/原始/ 目录只读<br>
+- 禁止编造数值
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">六要素提示词</div>
+      <div class="code" style="margin-top:10px;background:#1a0a2e;color:#d0b8f5;font-size:11.5px">
+【角色】Python 数据分析专家<br>
+【任务】生成地区×月份热力图脚本<br>
+【背景】<br>
+模拟数据：行=地区（华北/华南/华东/西南）<br>
+列=月份（1-12月），值=0-100随机整数<br>
+【步骤】<br>
+1. 用 pandas 生成 DataFrame<br>
+2. seaborn.heatmap，色板 YlOrRd<br>
+3. 标题/轴标签/数值标注<br>
+4. --output 参数指定输出路径<br>
+【格式】单个 .py，含注释，PNG 300dpi<br>
+【示例】输出：heatmap_output.png
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPLIANCE -->
+<section id="compliance" class="sec">
+  <span class="bc">合规与边界</span>
+  <h2 class="sec-title">合规使用规范：四条边界线</h2>
+  <p class="sec-lead">四条规则适用于所有成员使用 Claude.ai 和 Claude Code 的全部场景。不确定时先问项目负责人。</p>
+  <div class="comp-grid">
+    <div class="comp-card comp-red">
+      <div class="comp-title">🚫 客户资料与涉密数据</div>
+      <ul class="comp-list">
+        <li>禁止将客户全名、手机、身份证、合同金额上传任何 AI 平台</li>
+        <li>问卷数据上传前必须删除个人标识列</li>
+        <li>标注"内部资料"或"保密"的文件禁止上传</li>
+        <li>政府项目未公开数据禁止上传</li>
+      </ul>
+    </div>
+    <div class="comp-card comp-yellow">
+      <div class="comp-title">⚠️ 上传文件安全规则</div>
+      <ul class="comp-list">
+        <li>上传前问："如果这个文件被公开，有什么后果？"</li>
+        <li>优先上传摘要版本，而非完整原始文件</li>
+        <li>API Key、数据库配置文件禁止上传</li>
+        <li>CLAUDE.md 中不得写入任何密钥或真实客户信息</li>
+      </ul>
+    </div>
+    <div class="comp-card comp-red">
+      <div class="comp-title">🚫 AI 幻觉核验要求</div>
+      <ul class="comp-list">
+        <li>AI 生成的所有政策数据须点进原始链接核实</li>
+        <li>统计数字（规模/增速/排名）须标注来源后人工确认</li>
+        <li>AI 生成的"引用"逐一核实是否存在原始出处</li>
+        <li>Research 结论不得直接用于正式报告</li>
+      </ul>
+    </div>
+    <div class="comp-card comp-green">
+      <div class="comp-title">✅ 交付物复核规则</div>
+      <ul class="comp-list">
+        <li>含数据的交付物须有人工复核记录</li>
+        <li>AI 生成报告初稿须经项目负责人审阅后方可发客户</li>
+        <li>Claude Code 生成的 Excel/图表须与原始数据抽样比对</li>
+        <li>政策建议须咨询专业判断后写入</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout callout-red" style="margin-top:18px">
+    <strong>总原则：</strong>AI 是助手，不是背书人。所有对外交付物的准确性、合规性和专业性，最终责任在项目团队。
+  </div>
+</section>
+
+<!-- WRAPUP -->
+<section id="wrapup" class="sec">
+  <span class="bc">总结</span>
+  <h2 class="sec-title">带走 5 个判断</h2>
+  <p class="sec-lead">不必把每个功能都用上。这 5 个判断帮你在面对新任务时快速决定用哪个工具。</p>
+  <div class="steps">
+    <div class="step"><div class="step-n">01</div><div class="step-body"><div class="step-title">日常工作用 Sonnet 4.6，复杂分析用 Opus 4.7，批量子任务用 Haiku</div><div class="step-desc">90% 的工作 Sonnet 4.6 都够用，成本只有 Opus 的 1/5。Haiku 用于大量简单的 Subagent 任务，可以节省 80% 成本。Fable 5 目前暂停，不要等它。</div></div></div>
+    <div class="step"><div class="step-n">02</div><div class="step-body"><div class="step-title">功能名称记清楚：深度研究叫 Research，定时任务在 Desktop App 的 Cowork 里</div><div class="step-desc">Research 在浏览器版 claude.ai 对话工具栏里；Scheduled Tasks 在 Claude Desktop App → Cowork → Scheduled，不在浏览器里。两者不要混淆。</div></div></div>
+    <div class="step"><div class="step-n">03</div><div class="step-body"><div class="step-title">CLAUDE.md 只写可验证规则，保持 200 行以内</div><div class="step-desc">每一行都是每次请求的成本。只写数据口径、命名规范、禁止事项——专项任务逻辑放进 Skills。</div></div></div>
+    <div class="step"><div class="step-n">04</div><div class="step-body"><div class="step-title">复杂任务必须用 Plan Mode，出错用 Escape 中止</div><div class="step-desc">Claude Code 会真实执行文件操作。Shift+Tab 进入 Plan Mode 先看计划，确认后再执行。发现方向错误立即 Escape 两次中止。</div></div></div>
+    <div class="step"><div class="step-n">05</div><div class="step-body"><div class="step-title">所有对外交付物必须人工复核，AI 不背书</div><div class="step-desc">Claude 负责提速、初稿、格式化——数据准确性、结论合理性、合规边界，永远是项目团队的责任。</div></div></div>
+  </div>
+  <div class="callout callout-teal" style="margin-top:22px">
+    <strong>延伸资源：</strong>Anthropic 官方文档 docs.anthropic.com &nbsp;·&nbsp; Claude Code 文档 code.claude.com/docs &nbsp;·&nbsp; 模型定价 anthropic.com/pricing &nbsp;·&nbsp; Routines 管理 claude.ai/code/routines
+  </div>
+</section>
+
+</main>
+</div>
+
+<script>
+function setA(el){document.querySelectorAll('.sb-link').forEach(a=>a.classList.remove('active'));el.classList.add('active');}
+const sections=document.querySelectorAll('.sec[id]');
+const links=document.querySelectorAll('.sb-link');
+sections.forEach(sec=>{
+  new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting){const id=e.target.id;links.forEach(l=>{l.classList.remove('active');if(l.getAttribute('href')==='#'+id)l.classList.add('active');});}});},{rootMargin:'-15% 0px -72% 0px'}).observe(sec);
+});
+function toggleSop(head){head.classList.toggle('open');head.nextElementSibling.classList.toggle('open');}
+</script>
+</body>
+</html>
